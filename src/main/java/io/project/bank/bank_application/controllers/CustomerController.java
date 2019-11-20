@@ -40,19 +40,5 @@ public class CustomerController {
 
         return customerRepository.findBy_id(id);
     }
-
-
-
-    @RequestMapping(value = "/{customerId}/{accountId}", method = RequestMethod.PUT)
-    public Customer tranferMoney(@PathVariable("customerId") ObjectId customerId,@PathVariable("accountId") ObjectId accountId) {
-        Customer customer = customerRepository.findBy_id(customerId);
-        Account customerAccount = accountRepository.findBy_id(customer.getAccount1());
-        int accountBalance = customerAccount.getMoney();
-        int newAccountBalance = accountBalance - 200;
-
-        customerAccount.setMoney(newAccountBalance);
-        accountRepository.save(customerAccount);
-
-        return customer;
-    }
+    
 }

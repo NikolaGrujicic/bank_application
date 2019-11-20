@@ -1,35 +1,42 @@
 package io.project.bank.bank_application.controllers;
 
 import io.project.bank.bank_application.models.Account;
-import io.project.bank.bank_application.models.Bank;
 import io.project.bank.bank_application.models.Transfer;
 import io.project.bank.bank_application.repository.AccountRepository;
 import io.project.bank.bank_application.repository.TransferRepository;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/account")
 public class AccountController {
 
-    @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
     private TransferRepository transferRepository;
 
+    public AccountController(AccountRepository accountRepository, TransferRepository transferRepository) {
+        this.accountRepository = accountRepository;
+        this.transferRepository = transferRepository;
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Account getPetById(@PathVariable("id") ObjectId id) {
+    public Account getAccountById(@PathVariable("id") ObjectId id)
+    {
         return accountRepository.findBy_id(id);
     }
 
     @PostMapping(path = "/transfer", consumes = "application/json", produces = "application/json")
     public Transfer transferMoney( @RequestBody Transfer transfer) {
-        Account account1 = accountRepository.findBy_id(transfer.getAccountAid());
-        Account account2 = accountRepository.findBy_id(transfer.getAccountBid());
+        Account account1 = new Account();
+        Account account2 = new Account();
+
+        account1 = accountRepository.findBy_id(transfer.getAccountAid());
+
+        account2 = accountRepository.findBy_id(transfer.getAccountBid());
+
+        accountRepository.save(account1);
+        accountRepository.save(account2);
 
         int amountToTranfer = transfer.getAmountToTranfer();
 
