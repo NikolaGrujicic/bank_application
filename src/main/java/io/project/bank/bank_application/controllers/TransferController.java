@@ -5,15 +5,12 @@ import io.project.bank.bank_application.models.Transfer;
 import io.project.bank.bank_application.repository.CustomerRepository;
 import io.project.bank.bank_application.repository.TransferRepository;
 import org.bson.types.ObjectId;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/transfers")
+@RequestMapping("/transfer")
 public class TransferController {
 
     private TransferRepository transferRepository;
@@ -22,14 +19,13 @@ public class TransferController {
         this.transferRepository = transferRepository;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/getAll")
     public List<Transfer> getAllTransfers() {
         return transferRepository.findAll();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public Transfer getTransferById(@PathVariable("id") ObjectId id) {
-
         return transferRepository.findBy_id(id);
     }
     
