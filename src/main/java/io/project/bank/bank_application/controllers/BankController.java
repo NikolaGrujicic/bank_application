@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bank")
 public class BankController {
 
-    @Autowired
-    private BankRepository accountRepository;
+    private BankRepository bankRepository;
+
+    public BankController(BankRepository bankRepository) {
+        this.bankRepository = bankRepository;
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Bank getPetById(@PathVariable("id") ObjectId id) {
-        return accountRepository.findBy_id(id);
+    public Bank getBankById(@PathVariable("id") ObjectId id) {
+        return bankRepository.findBy_id(id);
     }
+
 }

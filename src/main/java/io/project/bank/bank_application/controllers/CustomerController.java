@@ -19,16 +19,11 @@ import java.util.List;
 @RequestMapping("/customer")
 public class CustomerController {
 
-    @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private BankRepository bankRepository;
-
-    public Customer customerMarko;
+    public CustomerController(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<Customer> getAllCustomers() {
