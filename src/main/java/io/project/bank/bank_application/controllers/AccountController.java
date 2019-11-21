@@ -25,7 +25,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "/getAll")
-    public List<Account> getAllBanks() {
+    public List<Account> getAllAccounts() {
         return accountRepository.findAll();
     }
 
