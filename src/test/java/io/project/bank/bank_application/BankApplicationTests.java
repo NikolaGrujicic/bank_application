@@ -16,6 +16,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class BankApplicationTests {
@@ -45,7 +48,7 @@ public class BankApplicationTests {
 		Account account1 = new Account(accountIdA, "Account A", "Bank A", bankIdA, "Customer A", customerIdA, 1000);
 		Account account2 = new Account(accountIdB, "Account B", "Bank A", bankIdA, "Customer B", customerIdB, 2000);
 
-		Transfer transfer = new Transfer(ObjectId.get(), accountIdA, accountIdB, 200, 5, "success", "");
+		Transfer transfer = new Transfer(ObjectId.get(), accountIdA, accountIdB, 200, 5, "success", "Intra-bank transfer");
 
 		Mockito.when(accountRepository.findBy_id(transfer.getAccountAid())).thenReturn(account1);
 		Mockito.when(accountRepository.findBy_id(transfer.getAccountBid())).thenReturn(account2);
@@ -60,6 +63,9 @@ public class BankApplicationTests {
 		Transfer transferResult = accountController.transferMoney(transfer);
 
 		Assertions.assertThat(transferResult).isNotNull();
+		Assertions.assertThat(transferResult.getCommision()).isEqualTo(0);
+		Assertions.assertThat(transferResult.getTransferType()).isEqualTo("Intra-bank transfer");
+		Assertions.assertThat(transferResult.getMessage()).isEqualTo("success");
 	}
 
 
@@ -75,7 +81,7 @@ public class BankApplicationTests {
 		Account account1 = new Account(accountIdA, "Account A", "Bank A", bankIdA, "Customer A", customerIdA, 1000);
 		Account account2 = new Account(accountIdB, "Account B", "Bank A", bankIdB, "Customer B", customerIdB, 2000);
 
-		Transfer transfer = new Transfer(ObjectId.get(), accountIdA, accountIdB, 200, 5, "success", "");
+		Transfer transfer = new Transfer(ObjectId.get(), accountIdA, accountIdB, 200, 5, "success", "Inter-bank transfer");
 
 		Mockito.when(accountRepository.findBy_id(transfer.getAccountAid())).thenReturn(account1);
 		Mockito.when(accountRepository.findBy_id(transfer.getAccountBid())).thenReturn(account2);
@@ -90,6 +96,9 @@ public class BankApplicationTests {
 		Transfer transferResult = accountController.transferMoney(transfer);
 
 		Assertions.assertThat(transferResult).isNotNull();
+		Assertions.assertThat(transferResult.getCommision()).isEqualTo(5);
+		Assertions.assertThat(transferResult.getTransferType()).isEqualTo("Inter-bank transfer");
+		Assertions.assertThat(transferResult.getMessage()).isEqualTo("success");
 	}
 
 	@Test
@@ -104,7 +113,7 @@ public class BankApplicationTests {
 		Account account1 = new Account(accountIdA, "Account A", "Bank A", bankIdA, "Customer A", customerIdA, 10000);
 		Account account2 = new Account(accountIdB, "Account B", "Bank A", bankIdB, "Customer B", customerIdB, 20000);
 
-		Transfer transfer = new Transfer(ObjectId.get(), accountIdA, accountIdB, 2000, 5, "success", "");
+		Transfer transfer = new Transfer(ObjectId.get(), accountIdA, accountIdB, 2000, 5, "cannot transfer more than 1000$ to foreign account", "Inter-bank transfer");
 
 		Mockito.when(accountRepository.findBy_id(transfer.getAccountAid())).thenReturn(account1);
 		Mockito.when(accountRepository.findBy_id(transfer.getAccountBid())).thenReturn(account2);
@@ -119,6 +128,10 @@ public class BankApplicationTests {
 		Transfer transferResult = accountController.transferMoney(transfer);
 
 		Assertions.assertThat(transferResult).isNotNull();
+		Assertions.assertThat(transferResult.getCommision()).isEqualTo(0);
+		Assertions.assertThat(transferResult.getTransferType()).isEqualTo("Inter-bank transfer");
+		Assertions.assertThat(transferResult.getMessage()).isEqualTo("cannot transfer more than 1000$ to foreign account");
 	}
+
 
 }
